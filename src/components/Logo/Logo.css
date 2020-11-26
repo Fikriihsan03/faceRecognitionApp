@@ -1,0 +1,7 @@
+.Tilt{
+    background : linear-gradient(to right, rgb(186 90 189),rgb(68 0 255));
+    transform-style: preserve-3d
+}
+.Tilt-inner{
+    transform: translateZ(20px)
+}
