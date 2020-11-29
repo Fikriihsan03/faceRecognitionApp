@@ -29,9 +29,29 @@ class App extends Component {
     super();
     this.state={
       input:'',
-      imageUrl :''
-    }
+      imageUrl :'',
+      box:{}
+      }
   }
+  calculateFaceLocation = (data) => {
+    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById("inputimage");
+    const width =Number(image.width);
+    const height =Number(image.height);
+    // console.log(width,height)
+    return{
+      leftCol : clarifaiFace.left_col * width,
+      topRow   : clarifaiFace.top_row * height,
+      rightCol : width - (clarifaiFace.right_col * width),
+      bottomRow   : height - (clarifaiFace.bottom_row * height)
+     }
+   }
+ 
+       faceBox = (box) => {
+        //  console.log(box)
+         this.setState({box:box})
+       }
+
   onInputChange = (event) =>{
     this.setState({input:event.target.value})
   }
@@ -39,12 +59,12 @@ class App extends Component {
     this.setState({imageUrl:this.state.input})
     app.models.initModel({id:Clarifai.FACE_DETECT_MODEL})
     .then(generalModel => {
-      return generalModel.predict("https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/03/GettyImages-1092658864_hero-1024x575.jpg?w=1155&h=1528");
+      return generalModel.predict(this.state.input);
     })
     .then(response => {
-      console.log(response.outputs[0].data.regions[0].region_info.bounding_box)
-      // var concepts = response['outputs'][0]['data']['concepts']
+     this.faceBox(this.calculateFaceLocation(response))
     })
+     .catch(err => console.log(err)) // var concepts = response['outputs'][0]['data']['concepts']
 
   }
 
@@ -62,7 +82,7 @@ render(){
       onInputChange={this.onInputChange} 
       onSubmit={this.onSubmit}
       />
-      <FaceRecognition imageUrl={this.state.imageUrl}/>
+      <FaceRecognition box={this.state.box}imageUrl={this.state.imageUrl}/>
     </div>
   )
 }
