@@ -1,6 +1,7 @@
 import './App.css';
 import React,{Component} from 'react';
 import Clarifai from 'clarifai';
+import SignIn from './components/SignIn/SignIn'
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
@@ -30,7 +31,8 @@ class App extends Component {
     this.state={
       input:'',
       imageUrl :'',
-      box:{}
+      box:{},
+      route:'signin'
       }
   }
   calculateFaceLocation = (data) => {
@@ -68,21 +70,31 @@ class App extends Component {
 
   }
 
+  onRouteChange =()=>{
+    this.setState({route:'home'})
+  }
+
 render(){
   return (
     <div className="App">
      <Particles className="particles" 
      params={particlesOption}
      />
-        
       <Navigation />
-      <Logo />
-      <Rank />
-      <ImageLinkForm 
-      onInputChange={this.onInputChange} 
-      onSubmit={this.onSubmit}
-      />
-      <FaceRecognition box={this.state.box}imageUrl={this.state.imageUrl}/>
+      {this.state.route === 'signin'
+      ?<SignIn onRouteChange={this.onRouteChange}/>  
+      :
+      <div> 
+        <Logo />
+        <Rank />
+        <ImageLinkForm 
+        onInputChange={this.onInputChange} 
+        onSubmit={this.onSubmit}
+        />
+        <FaceRecognition box={this.state.box}imageUrl={this.state.imageUrl}/>
+      </div>
+    }
+
     </div>
   )
 }
