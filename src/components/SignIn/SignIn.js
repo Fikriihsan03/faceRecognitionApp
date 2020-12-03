@@ -1,4 +1,5 @@
 import React from 'react';
+import 'animate.css'
 
 class SignIn extends React.Component {
     
@@ -27,7 +28,7 @@ class SignIn extends React.Component {
         })
         .then(response => response.json())
         .then(data => {
-            if(data == "success"){
+            if(data === "success"){
                 this.props.onRouteChange("home")
             }
         })
@@ -36,11 +37,11 @@ class SignIn extends React.Component {
     render(){
         const {onRouteChange} = this.props
         return(
-            <article className="br3 ba  b--black-10 mv5 w-100 w-50-m w-25-l mw6 center shadow-5">
+            <article className="animate__animated animate__lightSpeedInLeft br3 ba  b--black-10 mv5 w-100 w-50-m w-25-l mw6 center shadow-5">
                 <main className="pa4 black-80">
                 <div className="measure">
                     <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
-                        <legend className="f2 fw6 ph0 mh0">Sign In</legend>
+                        <legend className="animate__animated animate__bounce animate__delay-1s f2 fw6 ph0 mh0">Sign In</legend>
                         <div className="mt3">
                             <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
                             <input 
