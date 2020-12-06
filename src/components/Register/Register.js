@@ -32,7 +32,10 @@ class Register extends React.Component  {
         })
         .then(response => response.json())
         .then(user => {
-            if(user){
+            if(user === "unable to register"){
+                alert("invalid email")
+            }
+            else if(user){
                 this.props.registeredUser(user)
                 this.props.onRouteChange("home")
             }
