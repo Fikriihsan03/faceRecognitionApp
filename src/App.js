@@ -34,9 +34,28 @@ class App extends Component {
       imageUrl :'',
       box:{},
       route:'signin',
-      isSignIn:false
+      isSignIn:false,
+      user: {
+              id:'',
+              name:'',
+              email:'' ,
+              entries:0,
+              joined:''
+          }
       }
   }
+  //registering user
+  registerUser = (data) => {
+    this.setState({user:{
+      id:data.id,
+      name:data.name,
+      email:data.email,
+      entries:data.entries,
+      joined:data.joined
+    }})
+  }
+
+
   calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById("inputimage");
@@ -64,9 +83,24 @@ class App extends Component {
       return generalModel.predict(this.state.input);
     })
     .then(response => {
+      if(response){
+        fetch('http://localhost:3001/rank',{
+          method:'put',
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({
+              id:this.state.user.id
+          })
+      })
+      .then(response => response.json())
+      .then(count =>{
+        this.setState(Object.assign(this.state.user,{entries:count}))
+      })
+        
+      }
      this.faceBox(this.calculateFaceLocation(response))
     })
-     .catch(err => console.log(err)) // var concepts = response['outputs'][0]['data']['concepts']
+    .catch(err => console.log(err))
+
 
   }
 
@@ -89,7 +123,7 @@ render(){
       {this.state.route === 'home'
       ? <div> 
         <Logo />
-        <Rank />
+        <Rank name={this.state.user.name} entries ={this.state.user.entries} />
         <ImageLinkForm 
         onInputChange={this.onInputChange} 
         onSubmit={this.onSubmit}
@@ -98,9 +132,9 @@ render(){
       </div>
       :(this.state.route === 'signin'
         ?
-          <SignIn onRouteChange={this.onRouteChange}/>  
+          <SignIn registeredUser={this.registerUser}onRouteChange={this.onRouteChange}/>  
         :
-          <Register onRouteChange={this.onRouteChange}/>
+          <Register registeredUser={this.registerUser} onRouteChange={this.onRouteChange}/>
       )
     }
 
