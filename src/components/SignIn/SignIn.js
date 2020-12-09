@@ -27,7 +27,12 @@ class SignIn extends React.Component {
         })
           .then(response => response.json())
           .then(user => {
-            if (user.id) {
+              if(user === "wrong credential"){
+                  alert("something wrong with your input")
+              }else if(user==="please fill the form"){
+                  alert("please fill the form")
+              }
+            else if (user.id) {
               this.props.registeredUser(user)
               this.props.onRouteChange('home');
             }

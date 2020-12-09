@@ -34,6 +34,8 @@ class Register extends React.Component  {
         .then(user => {
             if(user === "unable to register"){
                 alert("invalid email")
+            }else if(user === "please fill the form"){
+                alert("please fill the form")
             }
             else if(user){
                 this.props.registeredUser(user)
